@@ -32,7 +32,11 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $this->log('login', 'Signed in to the system.');
 
-        return redirect()->intended(Auth::user()->isAdmin() ? route('admin.dashboard') : route('student.dashboard'));
+        return redirect()->intended(
+    Auth::check() && Auth::user()?->role === 'admin'
+        ? route('admin.dashboard')
+        : route('student.dashboard')
+);
     }
 
     public function showRegister(): View
