@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Student;
 use App\Models\User;
+use App\Http\Requests\StudentRegistrationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,17 +45,9 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request): RedirectResponse
+    public function register(StudentRegistrationRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'confirmed', 'min:8'],
-            'student_number' => ['required', 'string', 'max:50', 'unique:students,student_number'],
-            'course' => ['nullable', 'string', 'max:100'],
-            'year_level' => ['nullable', 'string', 'max:50'],
-            'phone' => ['nullable', 'string', 'max:30'],
-        ]);
+        $data = $request->validated();
 
         $user = User::create([
             'name' => $data['name'],
@@ -68,7 +61,7 @@ class AuthController extends Controller
             'student_number' => $data['student_number'],
             'course' => $data['course'] ?? null,
             'year_level' => $data['year_level'] ?? null,
-            'phone' => $data['phone'] ?? null,
+            'contact_number' => $data['contact_number'] ?? null,
         ]);
 
         Auth::login($user);

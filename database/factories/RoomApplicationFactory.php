@@ -12,10 +12,11 @@ class RoomApplicationFactory extends Factory
     {
         return [
             'student_id' => Student::query()->inRandomOrder()->value('id'),
-            'preferred_room_id' => Room::query()->inRandomOrder()->value('id'),
+            'room_id' => Room::query()->inRandomOrder()->value('id'),
+            'application_date' => fake()->dateTimeBetween('-2 months', 'now'),
             'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
-            'preferred_move_in_date' => fake()->dateTimeBetween('now', '+2 months'),
             'reason' => fake()->sentence(12),
+            'remarks' => fake()->optional()->sentence(),
         ];
     }
 }

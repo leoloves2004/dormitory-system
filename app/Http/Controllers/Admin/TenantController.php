@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TenantRequest;
 use App\Models\Room;
 use App\Models\Student;
 use App\Models\Tenant;
@@ -25,19 +26,19 @@ class TenantController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(TenantRequest $request): RedirectResponse
     {
-        $data = $this->validated($request);
+        $data = $request->validated();
         Tenant::create($data);
         Student::find($data['student_id'])?->update(['room_id' => $data['room_id']]);
 
         return back()->with('status', 'Tenant saved.');
     }
 
-    public function update(Request $request, Tenant $tenant): RedirectResponse
+    public function update(TenantRequest $request, Tenant $tenant): RedirectResponse
     {
         $previousStudentId = $tenant->student_id;
-        $data = $this->validated($request);
+        $data = $request->validated();
         $tenant->update($data);
         if ($previousStudentId && (int) $previousStudentId !== (int) $data['student_id']) {
             Student::whereKey($previousStudentId)->update(['room_id' => null]);
@@ -57,15 +58,4 @@ class TenantController extends Controller
         return back()->with('status', 'Tenant deleted.');
     }
 
-    private function validated(Request $request): array
-    {
-        return $request->validate([
-            'student_id' => ['required', 'exists:students,id'],
-            'room_id' => ['required', 'exists:rooms,id'],
-            'move_in_date' => ['required', 'date'],
-            'move_out_date' => ['nullable', 'date', 'after_or_equal:move_in_date'],
-            'status' => ['required', 'in:active,moved_out,suspended'],
-            'remarks' => ['nullable', 'string'],
-        ]);
-    }
 }

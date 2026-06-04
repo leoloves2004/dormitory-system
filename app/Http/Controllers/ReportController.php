@@ -69,15 +69,16 @@ class ReportController extends Controller
             'tenants' => Tenant::with('student.user', 'room')->get()->map(fn ($tenant) => [
                 'student' => $tenant->student?->user?->name,
                 'room' => $tenant->room?->room_number,
-                'move_in_date' => optional($tenant->move_in_date)->toDateString(),
-                'move_out_date' => optional($tenant->move_out_date)->toDateString(),
+                'check_in_date' => optional($tenant->check_in_date)->toDateString(),
+                'check_out_date' => optional($tenant->check_out_date)->toDateString(),
                 'status' => $tenant->status,
             ]),
-            'payments' => Payment::with('student.user')->get()->map(fn ($payment) => [
-                'student' => $payment->student?->user?->name,
+            'payments' => Payment::with('tenant.student.user', 'tenant.room')->get()->map(fn ($payment) => [
+                'student' => $payment->tenant?->student?->user?->name,
+                'room' => $payment->tenant?->room?->room_number,
                 'amount' => $payment->amount,
                 'payment_date' => optional($payment->payment_date)->toDateString(),
-                'method' => $payment->method,
+                'payment_method' => $payment->payment_method,
                 'status' => $payment->status,
                 'reference_number' => $payment->reference_number,
             ]),

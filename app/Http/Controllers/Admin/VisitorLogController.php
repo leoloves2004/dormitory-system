@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Room;
-use App\Models\Student;
+use App\Models\Tenant;
 use App\Models\VisitorLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,9 +14,8 @@ class VisitorLogController extends Controller
     public function index(): View
     {
         return view('admin.visitor-logs.index', [
-            'visitorLogs' => VisitorLog::with('student.user', 'room')->latest('time_in')->paginate(10),
-            'students' => Student::with('user')->get(),
-            'rooms' => Room::orderBy('room_number')->get(),
+            'visitorLogs' => VisitorLog::with('tenant.student.user', 'tenant.room')->latest('time_in')->paginate(10),
+            'tenants' => Tenant::with('student.user', 'room')->get(),
         ]);
     }
 
@@ -45,10 +43,10 @@ class VisitorLogController extends Controller
     private function validated(Request $request): array
     {
         return $request->validate([
-            'student_id' => ['nullable', 'exists:students,id'],
-            'room_id' => ['nullable', 'exists:rooms,id'],
+            'tenant_id' => ['nullable', 'exists:tenants,id'],
             'visitor_name' => ['required', 'string', 'max:255'],
             'visitor_phone' => ['nullable', 'string', 'max:30'],
+            'visit_date' => ['required', 'date'],
             'purpose' => ['nullable', 'string', 'max:255'],
             'time_in' => ['required', 'date'],
             'time_out' => ['nullable', 'date', 'after_or_equal:time_in'],

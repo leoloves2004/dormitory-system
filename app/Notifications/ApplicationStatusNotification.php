@@ -27,7 +27,7 @@ class ApplicationStatusNotification extends Notification
             ->greeting('Hello '.$notifiable->name)
             ->line('Your dormitory room application is now '.$this->application->status.'.')
             ->line('Preferred room: '.($this->application->preferredRoom?->room_number ?? 'Any room'))
-            ->line($this->application->admin_notes ?: 'Please check your student portal for details.')
+            ->line($this->application->remarks ?: 'Please check your student portal for details.')
             ->action('View Portal', route('student.dashboard'));
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['student_id', 'preferred_room_id', 'approved_by', 'status', 'preferred_move_in_date', 'reason', 'admin_notes', 'reviewed_at'])]
+#[Fillable(['student_id', 'room_id', 'approved_by', 'application_date', 'status', 'reason', 'remarks', 'reviewed_at'])]
 class RoomApplication extends Model
 {
     /** @use HasFactory<RoomApplicationFactory> */
@@ -16,7 +16,7 @@ class RoomApplication extends Model
 
     protected function casts(): array
     {
-        return ['preferred_move_in_date' => 'date', 'reviewed_at' => 'datetime'];
+        return ['application_date' => 'date', 'reviewed_at' => 'datetime'];
     }
 
     public function student(): BelongsTo
@@ -26,7 +26,7 @@ class RoomApplication extends Model
 
     public function preferredRoom(): BelongsTo
     {
-        return $this->belongsTo(Room::class, 'preferred_room_id');
+        return $this->belongsTo(Room::class, 'room_id');
     }
 
     public function reviewer(): BelongsTo

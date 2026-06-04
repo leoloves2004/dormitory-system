@@ -16,6 +16,39 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
 
+<<<<<<< HEAD
+Route::middleware('guest.restricted')->group(function (): void {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+Route::middleware('auth.protected')->group(function (): void {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/dark-mode', [AuthController::class, 'toggleDarkMode'])->name('dark-mode');
+
+    Route::middleware('student')->prefix('student')->name('student.')->group(function (): void {
+        Route::get('/dashboard', [StudentPortalController::class, 'dashboard'])->name('dashboard');
+        Route::post('/apply', [StudentPortalController::class, 'apply'])->name('apply');
+        Route::put('/profile', [StudentPortalController::class, 'profile'])->name('profile');
+    });
+
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function (): void {
+        Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+        Route::resource('rooms', RoomController::class)->except(['create', 'show', 'edit']);
+        Route::resource('students', StudentController::class)->except(['create', 'show', 'edit']);
+        Route::resource('tenants', TenantController::class)->except(['create', 'show', 'edit']);
+        Route::resource('payments', PaymentController::class)->except(['create', 'show', 'edit']);
+        Route::resource('applications', RoomApplicationController::class)->parameters(['applications' => 'roomApplication'])->except(['create', 'show', 'edit', 'store']);
+        Route::resource('visitor-logs', VisitorLogController::class)->except(['create', 'show', 'edit']);
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/{type}/{format}', [ReportController::class, 'export'])->name('reports.export');
+        Route::post('imports/students', [ImportController::class, 'students'])->name('imports.students');
+        Route::post('imports/payments', [ImportController::class, 'payments'])->name('imports.payments');
+    });
+});
+=======
 Route::middleware('guest')->group(function (): void {
 
     Route::get('/login', [
@@ -172,3 +205,4 @@ Route::middleware('auth')->group(function (): void {
             )->name('imports.payments');
         });
 });
+>>>>>>> 365315dbdd92ba0e7a11a2170dec8179a6f6e29d

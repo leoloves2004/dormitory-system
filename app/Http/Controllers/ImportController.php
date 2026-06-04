@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Student;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class ImportController extends Controller
                     'user_id' => $user->id,
                     'course' => $row['course'] ?? null,
                     'year_level' => $row['year_level'] ?? null,
-                    'phone' => $row['phone'] ?? null,
+                    'contact_number' => $row['contact_number'] ?? $row['phone'] ?? null,
                 ]
             );
         }
@@ -43,16 +44,17 @@ class ImportController extends Controller
         $rows = $this->readRows($request);
         foreach ($rows as $row) {
             $student = Student::where('student_number', $row['student_number'] ?? null)->first();
-            if (! $student || empty($row['amount'])) {
+            $tenant = $student ? Tenant::where('student_id', $student->id)->where('status', 'active')->first() : null;
+            if (! $tenant || empty($row['amount'])) {
                 continue;
             }
 
             Payment::create([
-                'student_id' => $student->id,
+                'tenant_id' => $tenant->id,
                 'amount' => $row['amount'],
                 'payment_date' => $row['payment_date'] ?? now()->toDateString(),
                 'due_date' => $row['due_date'] ?? null,
-                'method' => $row['method'] ?? 'cash',
+                'payment_method' => $row['payment_method'] ?? $row['method'] ?? 'cash',
                 'reference_number' => $row['reference_number'] ?? null,
                 'status' => $row['status'] ?? 'paid',
                 'notes' => $row['notes'] ?? null,

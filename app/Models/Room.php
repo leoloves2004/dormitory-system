@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable(['room_number', 'building', 'floor', 'capacity', 'monthly_rate', 'status', 'amenities', 'qr_code'])]
+#[Fillable(['room_number', 'room_type', 'building', 'floor', 'capacity', 'occupied_slots', 'monthly_fee', 'status', 'amenities', 'qr_code'])]
 class Room extends Model
 {
     /** @use HasFactory<RoomFactory> */
@@ -16,7 +17,7 @@ class Room extends Model
 
     protected function casts(): array
     {
-        return ['monthly_rate' => 'decimal:2'];
+        return ['monthly_fee' => 'decimal:2'];
     }
 
     public function students(): HasMany
@@ -29,9 +30,14 @@ class Room extends Model
         return $this->hasMany(Tenant::class);
     }
 
+    public function tenantStudents(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'tenants')->withPivot(['check_in_date', 'check_out_date', 'status'])->withTimestamps();
+    }
+
     public function applications(): HasMany
     {
-        return $this->hasMany(RoomApplication::class, 'preferred_room_id');
+        return $this->hasMany(RoomApplication::class, 'room_id');
     }
 
     public function availableBeds(): int

@@ -10,72 +10,71 @@
 
 @layer components {
     .field {
-        @apply w-full rounded-md border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-3 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-teal-400 dark:focus:ring-teal-950;
+        @apply min-h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-3 focus:ring-slate-100;
     }
 
     .app-shell {
-        @apply min-h-screen bg-slate-100 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
-        background-image:
-            radial-gradient(circle at top left, rgb(240 253 250 / 0.72), transparent 34rem),
-            linear-gradient(180deg, rgb(248 250 252), rgb(241 245 249));
+        @apply min-h-screen bg-slate-100 text-slate-900 antialiased;
     }
 
-    .dark .app-shell {
-        background-image:
-            radial-gradient(circle at top left, rgb(20 184 166 / 0.12), transparent 34rem),
-            linear-gradient(180deg, rgb(2 6 23), rgb(15 23 42));
+    .workspace-main {
+        @apply min-w-0 flex-1 bg-slate-100 text-slate-900;
+    }
+
+    .workspace-header {
+        @apply sticky top-0 z-20 border-b border-slate-200 bg-white/95 px-4 py-4 shadow-xs backdrop-blur sm:px-6;
     }
 
     .panel {
-        @apply rounded-lg border border-slate-200 bg-white shadow-sm ring-1 ring-black/0 dark:border-slate-800 dark:bg-slate-900/95;
+        @apply rounded-lg border border-slate-200 bg-white shadow-xs ring-1 ring-black/0;
     }
 
     .panel-header {
-        @apply border-b border-slate-200 bg-slate-50/80 px-5 py-4 dark:border-slate-800 dark:bg-slate-950/40;
+        @apply border-b border-slate-200 bg-white px-5 py-5 sm:px-6;
     }
 
     .panel-body {
-        @apply p-5;
+        @apply p-5 sm:p-6;
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center rounded-md bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-3 focus:ring-teal-200 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:focus:ring-teal-950;
+        @apply inline-flex min-h-11 items-center justify-center rounded-md bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-slate-800 focus:outline-none focus:ring-3 focus:ring-slate-200;
     }
 
     .btn-secondary {
-        @apply inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-xs transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800;
+        @apply inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-xs transition hover:border-slate-400 hover:bg-slate-50;
     }
 
     .btn-danger {
-        @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-950;
+        @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50;
     }
 
     .eyebrow {
-        @apply text-xs font-semibold uppercase tracking-wide text-teal-700 dark:text-teal-300;
+        @apply text-xs font-semibold uppercase tracking-wide text-slate-500;
     }
 
     .table-wrap {
-        @apply w-full overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900;
+        @apply w-full overflow-x-auto rounded-lg border border-slate-200 bg-white;
     }
 
     .data-table {
-        @apply w-full table-fixed text-left text-sm;
+        @apply min-w-[760px] w-full text-left text-sm;
     }
 
     .data-table thead {
-        @apply bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400;
+        @apply bg-slate-50 text-xs uppercase tracking-wide text-slate-500;
     }
 
     .data-table th {
-        @apply break-words px-3 py-3 font-semibold sm:px-4 sm:py-3.5;
+        @apply whitespace-nowrap px-3 py-3 font-semibold sm:px-4 sm:py-3.5;
     }
 
     .data-table td {
-        @apply break-words border-t border-slate-200 px-3 py-3 align-top dark:border-slate-800 sm:px-4 sm:py-3.5;
+        @apply max-w-56 break-words border-t border-slate-200 px-3 py-3 align-top sm:px-4 sm:py-3.5;
     }
 
     .data-table tbody tr {
-        @apply transition hover:bg-slate-50/80 dark:hover:bg-slate-800/45;
+        @apply transition hover:bg-slate-50/80;
     }
 
     .status-pill {
@@ -83,26 +82,55 @@
     }
 
     .status-pending {
-        @apply bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-900;
+        @apply bg-amber-50 text-amber-800 ring-amber-200;
     }
 
     .status-approved,
     .status-paid,
     .status-active,
     .status-available {
-        @apply bg-emerald-50 text-emerald-800 ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-200 dark:ring-emerald-900;
+        @apply bg-emerald-50 text-emerald-800 ring-emerald-200;
     }
 
     .status-rejected,
     .status-overdue,
     .status-cancelled,
     .status-suspended {
-        @apply bg-rose-50 text-rose-800 ring-rose-200 dark:bg-rose-950 dark:text-rose-200 dark:ring-rose-900;
+        @apply bg-rose-50 text-rose-800 ring-rose-200;
     }
 
     .status-occupied,
     .status-maintenance,
-    .status-moved_out {
-        @apply bg-indigo-50 text-indigo-800 ring-indigo-200 dark:bg-indigo-950 dark:text-indigo-200 dark:ring-indigo-900;
+    .status-moved_out,
+    .status-inactive {
+        @apply bg-slate-100 text-slate-700 ring-slate-200;
+    }
+
+    .metric-card {
+        @apply rounded-lg border border-slate-200 bg-white p-5 shadow-xs sm:p-6;
+    }
+
+    .icon-button {
+        @apply inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 shadow-xs transition hover:bg-slate-50 focus:outline-none focus:ring-3 focus:ring-slate-100;
+    }
+
+    .content-shell {
+        @apply mx-auto max-w-screen-2xl p-5 sm:p-7 lg:p-9;
+    }
+
+    .page-grid {
+        @apply grid gap-5 sm:gap-6;
+    }
+
+    .sidebar-open .app-sidebar {
+        @apply translate-x-0;
+    }
+
+    .sidebar-open .sidebar-backdrop {
+        @apply block;
+    }
+
+    .sidebar-collapsed .app-sidebar {
+        @apply lg:w-0 lg:-translate-x-full lg:overflow-hidden lg:border-r-0;
     }
 }
