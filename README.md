@@ -4,9 +4,9 @@ A Laravel MVC final-project implementation for managing dormitory rooms, tenants
 
 ## Developers
 
-- Add developer name 1
-- Add developer name 2
-- Add developer name 3
+- Leomhel Anthwal
+- Jim Mark Montemayor
+- Mark Neilson Tol
 
 ## Stack
 
