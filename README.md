@@ -11,7 +11,7 @@ A Laravel MVC final-project implementation for managing dormitory rooms, tenants
 ## Stack
 
 - Laravel 13
-- Blade templates with `x-layout` and `x-nav-link` components
+- Blade templates with layout, navigation, sidebar, and reusable link components
 - Tailwind CSS
 - Eloquent ORM
 - SQLite by default, with MySQL/PostgreSQL supported through `.env`
@@ -29,7 +29,8 @@ Students created by the factory also use `password`.
 
 - Authentication: login, registration, logout, hashed passwords, sessions
 - Roles: `admin` and `student`
-- Middleware: `auth` and custom `role` middleware
+- Middleware: admin-only, student-only, guest restriction, authentication protection, and reusable role middleware
+- Form Request validation for registration, rooms, room applications, payments, tenants, students, profile updates, and API writes
 - Admin dashboard statistics and analytics
 - Room, student, tenant, payment, application, and visitor log management
 - Student room applications, assignment view, profile update, and payment history
@@ -58,10 +59,15 @@ Students created by the factory also use `password`.
 ## Eloquent Relationships
 
 - `User hasOne Student`
-- `Student belongsTo Room`
-- `Room hasMany Students`
-- `Student hasMany Payments`
-- `Room hasMany Tenants`
+- `Student belongsTo User`
+- `Student hasMany RoomApplications`
+- `Student belongsToMany Rooms through Tenants`
+- `Room hasMany RoomApplications`
+- `Room belongsToMany Students through Tenants`
+- `Tenant belongsTo Student`
+- `Tenant belongsTo Room`
+- `Tenant hasMany Payments`
+- `Payment belongsTo Tenant`
 - `Student hasMany RoomApplications`
 
 ## Setup
@@ -125,13 +131,51 @@ GET|PUT|PATCH|DELETE /api/room-applications/{room_application}
 Student CSV headers:
 
 ```csv
-name,email,student_number,course,year_level,phone
+name,email,student_number,course,year_level,contact_number
 ```
 
 Payment CSV headers:
 
 ```csv
-student_number,amount,payment_date,due_date,method,reference_number,status,notes
+student_number,amount,payment_date,due_date,payment_method,reference_number,status,notes
 ```
 
 The interface accepts `.csv` and `.xlsx` extensions. For production-grade XLSX parsing or true binary PDF generation, add packages such as Laravel Excel and DomPDF.
+
+## GitHub Setup
+
+```bash
+git init
+git add .
+git commit -m "Initial dormitory management system"
+git branch -M main
+git remote add origin https://github.com/your-username/dormitory-system.git
+git push -u origin main
+```
+
+Suggested commit sequence:
+
+```bash
+git add database app/Models
+git commit -m "Add dormitory database schema and models"
+git add app/Http routes
+git commit -m "Add web and API controllers"
+git add resources tests README.md
+git commit -m "Add Blade UI, tests, and documentation"
+```
+
+## Deployment Guide
+
+For Render or Railway:
+
+1. Create a new web service from the GitHub repository.
+2. Set environment variables from `.env.example`.
+3. Use `composer install --no-dev --optimize-autoloader && npm ci && npm run build` as the build command.
+4. Use `php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT` as the start command.
+
+For shared Laravel hosting:
+
+1. Upload the project files.
+2. Point the web root to `public`.
+3. Configure `.env`, database credentials, and `APP_KEY`.
+4. Run migrations and seeders from the hosting terminal.

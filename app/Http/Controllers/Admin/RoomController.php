@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoomRequest;
 use App\Models\Room;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,16 +21,16 @@ class RoomController extends Controller
         return view('admin.rooms.index', compact('rooms'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(RoomRequest $request): RedirectResponse
     {
-        Room::create($this->validated($request));
+        Room::create($request->validated());
 
         return back()->with('status', 'Room saved.');
     }
 
-    public function update(Request $request, Room $room): RedirectResponse
+    public function update(RoomRequest $request, Room $room): RedirectResponse
     {
-        $room->update($this->validated($request, $room));
+        $room->update($request->validated());
 
         return back()->with('status', 'Room updated.');
     }
@@ -41,16 +42,4 @@ class RoomController extends Controller
         return back()->with('status', 'Room deleted.');
     }
 
-    private function validated(Request $request, ?Room $room = null): array
-    {
-        return $request->validate([
-            'room_number' => ['required', 'string', 'max:50', 'unique:rooms,room_number,'.($room?->id ?? 'NULL')],
-            'building' => ['nullable', 'string', 'max:100'],
-            'floor' => ['required', 'integer', 'min:1'],
-            'capacity' => ['required', 'integer', 'min:1'],
-            'monthly_rate' => ['required', 'numeric', 'min:0'],
-            'status' => ['required', 'in:available,occupied,maintenance'],
-            'amenities' => ['nullable', 'string'],
-        ]);
-    }
 }

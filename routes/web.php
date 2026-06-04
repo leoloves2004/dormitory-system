@@ -15,24 +15,24 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
 
-Route::middleware('guest')->group(function (): void {
+Route::middleware('guest.restricted')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-Route::middleware('auth')->group(function (): void {
+Route::middleware('auth.protected')->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/dark-mode', [AuthController::class, 'toggleDarkMode'])->name('dark-mode');
 
-    Route::middleware('role:student')->prefix('student')->name('student.')->group(function (): void {
+    Route::middleware('student')->prefix('student')->name('student.')->group(function (): void {
         Route::get('/dashboard', [StudentPortalController::class, 'dashboard'])->name('dashboard');
         Route::post('/apply', [StudentPortalController::class, 'apply'])->name('apply');
         Route::put('/profile', [StudentPortalController::class, 'profile'])->name('profile');
     });
 
-    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function (): void {
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function (): void {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
         Route::resource('rooms', RoomController::class)->except(['create', 'show', 'edit']);
         Route::resource('students', StudentController::class)->except(['create', 'show', 'edit']);

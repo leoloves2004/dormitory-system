@@ -16,12 +16,13 @@ class StudentFactory extends Factory
             'student_number' => fake()->unique()->numerify('STU-20##-####'),
             'course' => fake()->randomElement(['BSIT', 'BSCS', 'BSA', 'BSED', 'BSBA']),
             'year_level' => fake()->randomElement(['1st Year', '2nd Year', '3rd Year', '4th Year']),
-            'phone' => fake()->phoneNumber(),
+            'contact_number' => fake()->phoneNumber(),
             'birthdate' => fake()->dateTimeBetween('-24 years', '-17 years'),
             'gender' => fake()->randomElement(['Female', 'Male', 'Prefer not to say']),
             'address' => fake()->address(),
             'guardian_name' => fake()->name(),
             'guardian_phone' => fake()->phoneNumber(),
+            'status' => 'active',
         ];
     }
 }

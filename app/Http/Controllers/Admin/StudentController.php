@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentRequest;
 use App\Models\Room;
 use App\Models\Student;
 use App\Models\User;
@@ -26,9 +27,9 @@ class StudentController extends Controller
         return view('admin.students.index', ['students' => $students, 'rooms' => Room::orderBy('room_number')->get()]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StudentRequest $request): RedirectResponse
     {
-        $data = $this->validated($request);
+        $data = $request->validated();
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -40,9 +41,9 @@ class StudentController extends Controller
         return back()->with('status', 'Student created.');
     }
 
-    public function update(Request $request, Student $student): RedirectResponse
+    public function update(StudentRequest $request, Student $student): RedirectResponse
     {
-        $data = $this->validated($request, $student);
+        $data = $request->validated();
         $userData = ['name' => $data['name'], 'email' => $data['email']];
         if (! empty($data['password'])) {
             $userData['password'] = Hash::make($data['password']);
@@ -61,20 +62,4 @@ class StudentController extends Controller
         return back()->with('status', 'Student deleted.');
     }
 
-    private function validated(Request $request, ?Student $student = null): array
-    {
-        $userId = $student?->user_id ?? 'NULL';
-
-        return $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email,'.$userId],
-            'password' => [$student ? 'nullable' : 'required', 'string', 'min:8'],
-            'student_number' => ['required', 'string', 'max:50', 'unique:students,student_number,'.($student?->id ?? 'NULL')],
-            'room_id' => ['nullable', 'exists:rooms,id'],
-            'course' => ['nullable', 'string', 'max:100'],
-            'year_level' => ['nullable', 'string', 'max:50'],
-            'phone' => ['nullable', 'string', 'max:30'],
-            'address' => ['nullable', 'string', 'max:1000'],
-        ]);
-    }
 }

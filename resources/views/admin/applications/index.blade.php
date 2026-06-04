@@ -13,20 +13,20 @@
         <div class="panel-body">
             <div class="table-wrap">
                 <table class="data-table">
-                    <thead><tr><th>Student</th><th>Preferred Room</th><th>Status</th><th>Move In</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Student</th><th>Preferred Room</th><th>Status</th><th>Application Date</th><th>Action</th></tr></thead>
                     <tbody>
                         @forelse($applications as $application)
                             <tr>
                                 <td class="font-semibold">{{ $application->student->user->name }}</td>
                                 <td>{{ $application->preferredRoom?->room_number ?? 'Any' }}</td>
                                 <td><span class="status-pill status-{{ $application->status }}">{{ $application->status }}</span></td>
-                                <td>{{ optional($application->preferred_move_in_date)->toFormattedDateString() }}</td>
+                                <td>{{ optional($application->application_date)->toFormattedDateString() }}</td>
                                 <td>
                                     <form method="post" action="{{ route('admin.applications.update', $application) }}" class="grid w-full gap-2 xl:grid-cols-[minmax(90px,120px)_minmax(90px,120px)_minmax(0,1fr)_auto]">
                                         @csrf @method('put')
-                                        <select name="preferred_room_id" class="field"><option value="">Any</option>@foreach($rooms as $room)<option value="{{ $room->id }}" @selected($application->preferred_room_id===$room->id)>{{ $room->room_number }}</option>@endforeach</select>
+                                        <select name="room_id" class="field"><option value="">Any</option>@foreach($rooms as $room)<option value="{{ $room->id }}" @selected($application->room_id===$room->id)>{{ $room->room_number }}</option>@endforeach</select>
                                         <select name="status" class="field">@foreach(['pending','approved','rejected'] as $status)<option @selected($application->status===$status)>{{ $status }}</option>@endforeach</select>
-                                        <input name="admin_notes" placeholder="Reviewer notes" class="field">
+                                        <input name="remarks" placeholder="Reviewer notes" class="field">
                                         <button class="btn-primary">Save</button>
                                     </form>
                                 </td>

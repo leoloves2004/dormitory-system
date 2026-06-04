@@ -41,7 +41,10 @@ class DatabaseSeeder extends Seeder
         VisitorLog::factory(20)->create();
 
         Room::query()->withCount('students')->get()->each(function (Room $room): void {
-            $room->update(['status' => $room->students_count >= $room->capacity ? 'occupied' : 'available']);
+            $room->update([
+                'occupied_slots' => $room->students_count,
+                'status' => $room->students_count >= $room->capacity ? 'occupied' : 'available',
+            ]);
         });
     }
 }

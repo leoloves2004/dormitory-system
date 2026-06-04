@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApplicationReviewRequest;
 use App\Models\Room;
 use App\Models\RoomApplication;
 use App\Models\Tenant;
@@ -23,21 +24,17 @@ class RoomApplicationController extends Controller
         return view('admin.applications.index', ['applications' => $applications, 'rooms' => Room::orderBy('room_number')->get()]);
     }
 
-    public function update(Request $request, RoomApplication $roomApplication): RedirectResponse
+    public function update(ApplicationReviewRequest $request, RoomApplication $roomApplication): RedirectResponse
     {
-        $data = $request->validate([
-            'status' => ['required', 'in:pending,approved,rejected'],
-            'preferred_room_id' => ['nullable', 'exists:rooms,id'],
-            'admin_notes' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
         $roomApplication->update($data + ['approved_by' => Auth::id(), 'reviewed_at' => now()]);
 
-        if ($data['status'] === 'approved' && $data['preferred_room_id']) {
-            $roomApplication->student->update(['room_id' => $data['preferred_room_id']]);
+        if ($data['status'] === 'approved' && $data['room_id']) {
+            $roomApplication->student->update(['room_id' => $data['room_id']]);
             Tenant::updateOrCreate(
                 ['student_id' => $roomApplication->student_id, 'status' => 'active'],
-                ['room_id' => $data['preferred_room_id'], 'move_in_date' => now()->toDateString()]
+                ['room_id' => $data['room_id'], 'check_in_date' => now()->toDateString()]
             );
         }
 

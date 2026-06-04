@@ -15,7 +15,7 @@
                 <label class="text-sm font-semibold">Student Number <input name="student_number" required class="field mt-1"></label>
                 <label class="text-sm font-semibold">Course <input name="course" class="field mt-1"></label>
                 <label class="text-sm font-semibold">Year Level <input name="year_level" class="field mt-1"></label>
-                <label class="text-sm font-semibold">Phone <input name="phone" class="field mt-1"></label>
+                <label class="text-sm font-semibold">Contact Number <input name="contact_number" class="field mt-1"></label>
             </div>
             <div class="mt-6 flex flex-wrap items-center gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
                 <button class="btn-primary">Register</button>

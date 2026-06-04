@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['student_id', 'room_id', 'move_in_date', 'move_out_date', 'status', 'remarks'])]
+#[Fillable(['student_id', 'room_id', 'check_in_date', 'check_out_date', 'status', 'remarks'])]
 class Tenant extends Model
 {
     /** @use HasFactory<TenantFactory> */
@@ -16,7 +17,7 @@ class Tenant extends Model
 
     protected function casts(): array
     {
-        return ['move_in_date' => 'date', 'move_out_date' => 'date'];
+        return ['check_in_date' => 'date', 'check_out_date' => 'date'];
     }
 
     public function student(): BelongsTo
@@ -27,5 +28,10 @@ class Tenant extends Model
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }

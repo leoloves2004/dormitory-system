@@ -10,8 +10,8 @@
                 <input name="visitor_name" placeholder="Visitor name" required class="field">
                 <input name="visitor_phone" placeholder="Phone" class="field">
                 <input name="purpose" placeholder="Purpose" class="field">
-                <select name="student_id" class="field"><option value="">Host student</option>@foreach($students as $student)<option value="{{ $student->id }}">{{ $student->user->name }}</option>@endforeach</select>
-                <select name="room_id" class="field"><option value="">Room</option>@foreach($rooms as $room)<option value="{{ $room->id }}">{{ $room->room_number }}</option>@endforeach</select>
+                <select name="tenant_id" class="field"><option value="">Host tenant</option>@foreach($tenants as $tenant)<option value="{{ $tenant->id }}">{{ $tenant->student?->user?->name }} - {{ $tenant->room?->room_number }}</option>@endforeach</select>
+                <input name="visit_date" type="date" value="{{ now()->toDateString() }}" required class="field">
                 <input name="time_in" type="datetime-local" required class="field">
                 <button class="btn-primary w-full">Save visitor log</button>
             </div>
@@ -29,8 +29,8 @@
                             @forelse($visitorLogs as $log)
                                 <tr>
                                     <td class="font-semibold">{{ $log->visitor_name }}</td>
-                                    <td>{{ $log->student?->user?->name }}</td>
-                                    <td>{{ $log->room?->room_number }}</td>
+                                    <td>{{ $log->tenant?->student?->user?->name }}</td>
+                                    <td>{{ $log->tenant?->room?->room_number }}</td>
                                     <td>{{ $log->time_in }}</td>
                                     <td>
                                         <div class="flex min-w-64 flex-col gap-2">
@@ -42,8 +42,8 @@
                                                     <input name="visitor_name" value="{{ $log->visitor_name }}" required class="field">
                                                     <input name="visitor_phone" value="{{ $log->visitor_phone }}" class="field">
                                                     <input name="purpose" value="{{ $log->purpose }}" class="field">
-                                                    <select name="student_id" class="field"><option value="">Host student</option>@foreach($students as $student)<option value="{{ $student->id }}" @selected($log->student_id === $student->id)>{{ $student->user->name }}</option>@endforeach</select>
-                                                    <select name="room_id" class="field"><option value="">Room</option>@foreach($rooms as $room)<option value="{{ $room->id }}" @selected($log->room_id === $room->id)>{{ $room->room_number }}</option>@endforeach</select>
+                                                    <select name="tenant_id" class="field"><option value="">Host tenant</option>@foreach($tenants as $tenant)<option value="{{ $tenant->id }}" @selected($log->tenant_id === $tenant->id)>{{ $tenant->student?->user?->name }} - {{ $tenant->room?->room_number }}</option>@endforeach</select>
+                                                    <input name="visit_date" type="date" value="{{ optional($log->visit_date)->toDateString() }}" required class="field">
                                                     <input name="time_in" type="datetime-local" value="{{ optional($log->time_in)->format('Y-m-d\TH:i') }}" required class="field">
                                                     <input name="time_out" type="datetime-local" value="{{ optional($log->time_out)->format('Y-m-d\TH:i') }}" class="field">
                                                     <button class="btn-primary w-full">Update</button>

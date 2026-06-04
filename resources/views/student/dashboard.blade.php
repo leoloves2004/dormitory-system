@@ -1,8 +1,8 @@
 <x-layout title="Student Portal">
-    <div class="grid gap-5 lg:grid-cols-3">
-        <section class="panel p-6">
+    <div class="grid gap-5 sm:gap-6 lg:grid-cols-3">
+        <section class="panel p-5 sm:p-6">
             <p class="eyebrow">Current assignment</p>
-            <p class="mt-3 text-4xl font-bold tracking-tight">{{ $student->room?->room_number ?? 'Unassigned' }}</p>
+            <p class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{{ $student->room?->room_number ?? 'Unassigned' }}</p>
             <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ $student->room?->building }} {{ $student->room ? 'Floor '.$student->room->floor : 'Submit an application to request a room.' }}</p>
             @if($student->room)
                 <div class="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-950">
@@ -19,15 +19,15 @@
             </div>
             <form method="post" action="{{ route('student.apply') }}" class="panel-body grid gap-3 md:grid-cols-3">
                 @csrf
-                <select name="preferred_room_id" class="field"><option value="">Any available room</option>@foreach($rooms as $room)<option value="{{ $room->id }}">{{ $room->room_number }} - {{ number_format($room->monthly_rate, 2) }}</option>@endforeach</select>
-                <input name="preferred_move_in_date" type="date" class="field">
+                <select name="room_id" class="field"><option value="">Any available room</option>@foreach($rooms as $room)<option value="{{ $room->id }}">{{ $room->room_number }} - {{ number_format($room->monthly_fee, 2) }}</option>@endforeach</select>
+                <input name="application_date" type="date" value="{{ now()->toDateString() }}" class="field">
                 <input name="reason" placeholder="Reason for request" required class="field">
                 <button class="btn-primary md:col-span-3">Submit application</button>
             </form>
         </section>
     </div>
 
-    <div class="mt-5 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+    <div class="mt-6 grid gap-5 sm:gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <section class="panel">
             <div class="panel-header">
                 <p class="eyebrow">Personal details</p>
@@ -37,7 +37,7 @@
                 @csrf @method('put')
                 <input name="course" value="{{ $student->course }}" placeholder="Course" class="field">
                 <input name="year_level" value="{{ $student->year_level }}" placeholder="Year level" class="field">
-                <input name="phone" value="{{ $student->phone }}" placeholder="Phone" class="field">
+                <input name="contact_number" value="{{ $student->contact_number }}" placeholder="Contact number" class="field">
                 <input name="guardian_name" value="{{ $student->guardian_name }}" placeholder="Guardian name" class="field">
                 <input name="guardian_phone" value="{{ $student->guardian_phone }}" placeholder="Guardian phone" class="field">
                 <input name="address" value="{{ $student->address }}" placeholder="Address" class="field">
@@ -59,7 +59,7 @@
                                 <strong>{{ $application->preferredRoom?->room_number ?? 'Any room' }}</strong>
                                 <span class="status-pill status-{{ $application->status }}">{{ $application->status }}</span>
                             </div>
-                            <p class="mt-2 text-slate-500 dark:text-slate-400">{{ $application->admin_notes ?: $application->reason }}</p>
+                            <p class="mt-2 text-slate-500 dark:text-slate-400">{{ $application->remarks ?: $application->reason }}</p>
                         </div>
                     @empty
                         <p class="p-5 text-sm text-slate-500 dark:text-slate-400">No applications submitted yet.</p>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="divide-y divide-slate-200 dark:divide-slate-800">
                     @forelse($student->payments->sortByDesc('payment_date') as $payment)
-                        <div class="flex justify-between gap-4 p-5 text-sm">
+                        <div class="flex flex-wrap justify-between gap-3 p-5 text-sm">
                             <span>{{ optional($payment->payment_date)->toDateString() }} <span class="status-pill status-{{ $payment->status }} ml-2">{{ $payment->status }}</span></span>
                             <strong>{{ number_format($payment->amount, 2) }}</strong>
                         </div>
