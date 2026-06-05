@@ -10,20 +10,12 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Models\VisitorLog;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Dormitory Admin',
-                'role' => 'admin',
-                'password' => Hash::make('password'),
-            ]
-        );
+        $this->call(AdminUserSeeder::class);
 
         if (Room::query()->exists()) {
             return;

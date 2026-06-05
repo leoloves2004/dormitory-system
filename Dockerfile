@@ -44,5 +44,5 @@ CMD rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_wo
     && sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${PORT:-8080}>/" /etc/apache2/sites-available/000-default.conf \
     && php artisan config:clear \
     && php artisan migrate --force \
-    && php artisan db:seed --force \
+    && php artisan db:seed --class=AdminUserSeeder --force \
     && apache2-foreground
