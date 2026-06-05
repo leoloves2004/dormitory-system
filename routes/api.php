@@ -7,8 +7,10 @@ use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TenantController;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('rooms', RoomController::class);
-Route::apiResource('students', StudentController::class);
-Route::apiResource('tenants', TenantController::class);
-Route::apiResource('payments', PaymentController::class);
-Route::apiResource('room-applications', RoomApplicationController::class);
+Route::middleware('api.token')->group(function (): void {
+    Route::apiResource('rooms', RoomController::class);
+    Route::apiResource('students', StudentController::class);
+    Route::apiResource('tenants', TenantController::class);
+    Route::apiResource('payments', PaymentController::class);
+    Route::apiResource('room-applications', RoomApplicationController::class);
+});

@@ -55,11 +55,22 @@ class DormitorySystemTest extends TestCase
 
     public function test_rooms_api_returns_json(): void
     {
+        config(['services.api_bearer_token' => 'test-token']);
         Room::factory()->create();
 
-        $this->getJson('/api/rooms')
+        $this->withHeader('Authorization', 'Bearer test-token')
+            ->getJson('/api/rooms')
             ->assertOk()
             ->assertJsonStructure(['data']);
+    }
+
+    public function test_rooms_api_requires_bearer_token(): void
+    {
+        config(['services.api_bearer_token' => 'test-token']);
+
+        $this->getJson('/api/rooms')
+            ->assertUnauthorized()
+            ->assertJson(['message' => 'Invalid or missing bearer token.']);
     }
 
     public function test_payment_report_exports_csv(): void
