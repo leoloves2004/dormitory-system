@@ -15,6 +15,7 @@ class VisitorLogFactory extends Factory
             'tenant_id' => Tenant::query()->inRandomOrder()->value('id'),
             'visitor_name' => fake()->name(),
             'visitor_phone' => fake()->phoneNumber(),
+            'visitor_count' => fake()->numberBetween(1, 8),
             'visit_date' => $timeIn,
             'purpose' => fake()->randomElement(['Family visit', 'Study group', 'Delivery', 'Maintenance']),
             'time_in' => $timeIn,

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Room;
 use App\Models\Student;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -83,5 +84,28 @@ class DormitorySystemTest extends TestCase
         ])->assertRedirect(route('student.dashboard'));
 
         $this->assertDatabaseHas('students', ['student_number' => 'STU-TEST-001']);
+    }
+
+    public function test_visitor_log_cannot_exceed_eight_people(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $studentUser = User::factory()->create(['role' => 'student']);
+        $room = Room::factory()->create();
+        $student = Student::factory()->create(['user_id' => $studentUser->id, 'room_id' => $room->id]);
+        $tenant = Tenant::factory()->create(['student_id' => $student->id, 'room_id' => $room->id]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.visitor-logs.store'), [
+                'tenant_id' => $tenant->id,
+                'visitor_name' => 'Group Visit',
+                'visitor_phone' => '09123456789',
+                'visitor_count' => 9,
+                'visit_date' => now()->toDateString(),
+                'purpose' => 'Family visit',
+                'time_in' => now()->toDateTimeString(),
+            ])
+            ->assertSessionHasErrors('visitor_count');
+
+        $this->assertDatabaseMissing('visitor_logs', ['visitor_name' => 'Group Visit']);
     }
 }

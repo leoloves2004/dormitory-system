@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['tenant_id', 'visitor_name', 'visitor_phone', 'visit_date', 'purpose', 'time_in', 'time_out'])]
+#[Fillable(['tenant_id', 'visitor_name', 'visitor_phone', 'visitor_count', 'visit_date', 'purpose', 'time_in', 'time_out'])]
 class VisitorLog extends Model
 {
     /** @use HasFactory<VisitorLogFactory> */
@@ -16,7 +16,7 @@ class VisitorLog extends Model
 
     protected function casts(): array
     {
-        return ['visit_date' => 'date', 'time_in' => 'datetime', 'time_out' => 'datetime'];
+        return ['visitor_count' => 'integer', 'visit_date' => 'date', 'time_in' => 'datetime', 'time_out' => 'datetime'];
     }
 
     public function tenant(): BelongsTo

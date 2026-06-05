@@ -46,10 +46,13 @@ class VisitorLogController extends Controller
             'tenant_id' => ['nullable', 'exists:tenants,id'],
             'visitor_name' => ['required', 'string', 'max:255'],
             'visitor_phone' => ['nullable', 'string', 'max:30'],
+            'visitor_count' => ['required', 'integer', 'min:1', 'max:8'],
             'visit_date' => ['required', 'date'],
             'purpose' => ['nullable', 'string', 'max:255'],
             'time_in' => ['required', 'date'],
             'time_out' => ['nullable', 'date', 'after_or_equal:time_in'],
+        ], [
+            'visitor_count.max' => 'A visitor log can include up to 8 people only.',
         ]);
     }
 }

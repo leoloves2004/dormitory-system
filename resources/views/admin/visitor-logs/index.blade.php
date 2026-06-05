@@ -9,6 +9,7 @@
             <div class="panel-body space-y-3">
                 <input name="visitor_name" placeholder="Visitor name" required class="field">
                 <input name="visitor_phone" placeholder="Phone" class="field">
+                <input name="visitor_count" type="number" min="1" max="8" value="{{ old('visitor_count', 1) }}" placeholder="Number of visitors, max 8" required class="field">
                 <input name="purpose" placeholder="Purpose" class="field">
                 <select name="tenant_id" class="field"><option value="">Host tenant</option>@foreach($tenants as $tenant)<option value="{{ $tenant->id }}">{{ $tenant->student?->user?->name }} - {{ $tenant->room?->room_number }}</option>@endforeach</select>
                 <input name="visit_date" type="date" value="{{ now()->toDateString() }}" required class="field">
@@ -24,11 +25,12 @@
             <div class="panel-body">
                 <div class="table-wrap">
                     <table class="data-table">
-                        <thead><tr><th>Visitor</th><th>Host</th><th>Room</th><th>Time In</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Visitor</th><th>People</th><th>Host</th><th>Room</th><th>Time In</th><th>Action</th></tr></thead>
                         <tbody>
                             @forelse($visitorLogs as $log)
                                 <tr>
                                     <td class="font-semibold">{{ $log->visitor_name }}</td>
+                                    <td>{{ $log->visitor_count }}</td>
                                     <td>{{ $log->tenant?->student?->user?->name }}</td>
                                     <td>{{ $log->tenant?->room?->room_number }}</td>
                                     <td>{{ $log->time_in }}</td>
@@ -41,6 +43,7 @@
                                                     @method('put')
                                                     <input name="visitor_name" value="{{ $log->visitor_name }}" required class="field">
                                                     <input name="visitor_phone" value="{{ $log->visitor_phone }}" class="field">
+                                                    <input name="visitor_count" type="number" min="1" max="8" value="{{ $log->visitor_count }}" required class="field">
                                                     <input name="purpose" value="{{ $log->purpose }}" class="field">
                                                     <select name="tenant_id" class="field"><option value="">Host tenant</option>@foreach($tenants as $tenant)<option value="{{ $tenant->id }}" @selected($log->tenant_id === $tenant->id)>{{ $tenant->student?->user?->name }} - {{ $tenant->room?->room_number }}</option>@endforeach</select>
                                                     <input name="visit_date" type="date" value="{{ optional($log->visit_date)->toDateString() }}" required class="field">
@@ -54,7 +57,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="text-slate-500 dark:text-slate-400">No visitor entries found.</td></tr>
+                                <tr><td colspan="6" class="text-slate-500 dark:text-slate-400">No visitor entries found.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
