@@ -123,6 +123,54 @@
                     @endforelse
                 </div>
             </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <p class="eyebrow">Maintenance</p>
+                    <h2 class="mt-1 text-lg font-bold">Request service</h2>
+                </div>
+
+                <form method="post" action="{{ route('student.maintenance.store') }}" class="panel-body grid gap-3">
+                    @csrf
+
+                    <input name="title" value="{{ old('title') }}" placeholder="Issue title" required class="field">
+
+                    <select name="priority" required class="field">
+                        @foreach(['Low', 'Medium', 'High'] as $priority)
+                            <option value="{{ $priority }}" @selected(old('priority', 'Low') === $priority)>
+                                {{ $priority }} priority
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <textarea name="description" placeholder="Describe the problem, location, and any useful details" required class="field min-h-28">{{ old('description') }}</textarea>
+
+                    <button class="btn-primary">Submit maintenance request</button>
+                </form>
+
+                <div class="divide-y divide-slate-200 dark:divide-slate-800">
+                    @forelse($maintenanceRequests as $request)
+                        <div class="p-5 text-sm">
+                            <div class="flex items-center justify-between gap-3">
+                                <strong>{{ $request->title }}</strong>
+                                <span class="status-pill status-{{ str_replace(' ', '_', strtolower($request->status)) }}">
+                                    {{ $request->status }}
+                                </span>
+                            </div>
+                            <p class="mt-2 text-slate-500 dark:text-slate-400">
+                                {{ $request->description }}
+                            </p>
+                            <p class="mt-3 text-xs font-semibold text-slate-500">
+                                {{ $request->priority }} priority - {{ optional($request->created_at)->diffForHumans() }}
+                            </p>
+                        </div>
+                    @empty
+                        <p class="p-5 text-sm text-slate-500 dark:text-slate-400">
+                            No maintenance requests submitted yet.
+                        </p>
+                    @endforelse
+                </div>
+            </div>
         </section>
     </div>
 </x-layout>

@@ -89,7 +89,8 @@
     .status-approved,
     .status-paid,
     .status-active,
-    .status-available {
+    .status-available,
+    .status-resolved {
         @apply bg-emerald-50 text-emerald-800 ring-emerald-200;
     }
 
@@ -103,7 +104,8 @@
     .status-occupied,
     .status-maintenance,
     .status-moved_out,
-    .status-inactive {
+    .status-inactive,
+    .status-in_progress {
         @apply bg-slate-100 text-slate-700 ring-slate-200;
     }
 

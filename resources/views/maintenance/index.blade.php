@@ -52,6 +52,10 @@
                                 {{ $request->title }}
                             </h4>
 
+                            <p class="mt-1 text-xs font-semibold text-slate-500">
+                                Submitted by {{ $request->user?->name ?? 'Unknown user' }}
+                            </p>
+
                             <p class="mt-2 text-sm text-slate-500">
                                 {{ $request->description }}
                             </p>

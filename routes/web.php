@@ -70,6 +70,11 @@ Route::middleware('auth')->group(function (): void {
                 '/profile',
                 [StudentPortalController::class, 'profile']
             )->name('profile');
+
+            Route::post(
+                '/maintenance',
+                [MaintenanceRequestController::class, 'store']
+            )->name('maintenance.store');
         });
 
     Route::middleware('role:admin')

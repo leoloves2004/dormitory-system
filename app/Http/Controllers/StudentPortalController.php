@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\RoomApplicationRequest;
+use App\Models\MaintenanceRequest;
 use App\Models\Room;
 use App\Models\RoomApplication;
 use Illuminate\Http\RedirectResponse;
@@ -19,6 +20,9 @@ class StudentPortalController extends Controller
         return view('student.dashboard', [
             'student' => $student,
             'rooms' => Room::where('status', 'available')->orderBy('room_number')->get(),
+            'maintenanceRequests' => MaintenanceRequest::where('user_id', $request->user()->id)
+                ->latest()
+                ->get(),
         ]);
     }
 

@@ -10,7 +10,7 @@ class MaintenanceRequestController extends Controller
 {
     public function index()
     {
-        $requests = MaintenanceRequest::latest()->get();
+        $requests = MaintenanceRequest::with('user')->latest()->get();
 
         return view(
             'maintenance.index',
@@ -20,16 +20,20 @@ class MaintenanceRequestController extends Controller
 
     public function store(Request $request)
     {
-        MaintenanceRequest::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'priority' => $request->priority,
-          'user_id' => Auth::user()->id,
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:2000'],
+            'priority' => ['required', 'in:Low,Medium,High'],
+        ]);
+
+        MaintenanceRequest::create($data + [
+            'user_id' => Auth::id(),
+            'status' => 'Pending',
         ]);
 
         return back()->with(
-            'success',
-            'Request submitted.'
+            'status',
+            'Maintenance request submitted.'
         );
     }
 }
