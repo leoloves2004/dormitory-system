@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminOnlyMiddleware::class,
             'auth.protected' => \App\Http\Middleware\AuthProtectionMiddleware::class,

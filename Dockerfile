@@ -42,5 +42,6 @@ EXPOSE 8080
 CMD rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* \
     && sed -i "s/Listen 80/Listen ${PORT:-8080}/" /etc/apache2/ports.conf \
     && sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${PORT:-8080}>/" /etc/apache2/sites-available/000-default.conf \
+    && php artisan config:clear \
     && php artisan migrate --force \
     && apache2-foreground
