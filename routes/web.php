@@ -61,6 +61,16 @@ Route::middleware('auth')->group(function (): void {
                 [StudentPortalController::class, 'dashboard']
             )->name('dashboard');
 
+            Route::get(
+                '/housing-request',
+                [StudentPortalController::class, 'housing']
+            )->name('housing');
+
+            Route::get(
+                '/maintenance-request',
+                [StudentPortalController::class, 'maintenance']
+            )->name('maintenance');
+
             Route::post(
                 '/apply',
                 [StudentPortalController::class, 'apply']

@@ -15,15 +15,36 @@ class StudentPortalController extends Controller
 {
     public function dashboard(Request $request): View
     {
+        return $this->housing($request);
+    }
+
+    public function housing(Request $request): View
+    {
+        return view('student.dashboard', $this->portalData($request) + [
+            'section' => 'housing',
+            'title' => 'Student Portal',
+        ]);
+    }
+
+    public function maintenance(Request $request): View
+    {
+        return view('student.dashboard', $this->portalData($request) + [
+            'section' => 'maintenance',
+            'title' => 'Student Portal',
+        ]);
+    }
+
+    private function portalData(Request $request): array
+    {
         $student = $request->user()->student()->with('room', 'payments', 'roomApplications.preferredRoom')->firstOrFail();
 
-        return view('student.dashboard', [
+        return [
             'student' => $student,
             'rooms' => Room::where('status', 'available')->orderBy('room_number')->get(),
             'maintenanceRequests' => MaintenanceRequest::where('user_id', $request->user()->id)
                 ->latest()
                 ->get(),
-        ]);
+        ];
     }
 
     public function apply(RoomApplicationRequest $request): RedirectResponse
