@@ -16,12 +16,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Dormitory Admin',
-            'email' => 'admin@example.com',
-            'role' => 'admin',
-            'password' => Hash::make('password'),
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Dormitory Admin',
+                'role' => 'admin',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        if (Room::query()->exists()) {
+            return;
+        }
 
         Room::factory(18)->create();
 
