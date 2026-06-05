@@ -11,7 +11,11 @@ class ApiBearerTokenMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $expectedToken = (string) config('services.api_bearer_token');
+        $expectedToken = (string) (
+            config('services.api_bearer_token')
+            ?: ($_ENV['API_BEARER_TOKEN'] ?? null)
+            ?: getenv('API_BEARER_TOKEN')
+        );
 
         if ($expectedToken === '') {
             return response()->json([
