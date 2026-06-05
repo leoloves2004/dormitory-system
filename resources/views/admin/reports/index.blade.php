@@ -16,13 +16,27 @@
     <div class="mt-5 grid gap-5 md:grid-cols-2">
         <form method="post" enctype="multipart/form-data" action="{{ route('admin.imports.students') }}" class="panel">
             @csrf
-            <div class="panel-header"><p class="eyebrow">Bulk upload</p><h2 class="mt-1 text-lg font-bold">Import students</h2></div>
-            <div class="panel-body"><input name="file" type="file" accept=".csv,.xlsx" required class="mb-4 block w-full text-sm"><button class="btn-primary">Upload students</button></div>
+            <div class="panel-header">
+                <p class="eyebrow">Bulk upload</p>
+                <h2 class="mt-1 text-lg font-bold">Import students</h2>
+                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">CSV or XLSX columns: name, email, student_number, course, year_level, phone.</p>
+            </div>
+            <div class="panel-body space-y-4">
+                <input name="file" type="file" accept=".csv,.txt,.xlsx" required class="block w-full rounded-md border border-slate-200 bg-white p-3 text-sm">
+                <button class="btn-primary w-full">Upload students</button>
+            </div>
         </form>
         <form method="post" enctype="multipart/form-data" action="{{ route('admin.imports.payments') }}" class="panel">
             @csrf
-            <div class="panel-header"><p class="eyebrow">Bulk upload</p><h2 class="mt-1 text-lg font-bold">Import payments</h2></div>
-            <div class="panel-body"><input name="file" type="file" accept=".csv,.xlsx" required class="mb-4 block w-full text-sm"><button class="btn-primary">Upload payments</button></div>
+            <div class="panel-header">
+                <p class="eyebrow">Bulk upload</p>
+                <h2 class="mt-1 text-lg font-bold">Import payments</h2>
+                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">CSV or XLSX columns: student_number, amount, payment_date, due_date, method, reference_number, status, notes.</p>
+            </div>
+            <div class="panel-body space-y-4">
+                <input name="file" type="file" accept=".csv,.txt,.xlsx" required class="block w-full rounded-md border border-slate-200 bg-white p-3 text-sm">
+                <button class="btn-primary w-full">Upload payments</button>
+            </div>
         </form>
     </div>
 </x-layout>

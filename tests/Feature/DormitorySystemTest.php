@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class DormitorySystemTest extends TestCase
@@ -107,5 +108,48 @@ class DormitorySystemTest extends TestCase
             ->assertSessionHasErrors('visitor_count');
 
         $this->assertDatabaseMissing('visitor_logs', ['visitor_name' => 'Group Visit']);
+    }
+
+    public function test_admin_can_import_students_from_csv(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $file = UploadedFile::fake()->createWithContent(
+            'students.csv',
+            "name,email,student_number,course,year_level,phone\nImport Student,import.student@example.com,STU-IMPORT-001,BSIT,2nd Year,09123456789\n"
+        );
+
+        $this->actingAs($admin)
+            ->post(route('admin.imports.students'), ['file' => $file])
+            ->assertSessionHas('status');
+
+        $this->assertDatabaseHas('users', ['email' => 'import.student@example.com', 'role' => 'student']);
+        $this->assertDatabaseHas('students', ['student_number' => 'STU-IMPORT-001', 'course' => 'BSIT']);
+    }
+
+    public function test_admin_can_import_payments_from_csv(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $studentUser = User::factory()->create(['role' => 'student']);
+        $room = Room::factory()->create();
+        $student = Student::factory()->create([
+            'user_id' => $studentUser->id,
+            'room_id' => $room->id,
+            'student_number' => 'STU-PAY-001',
+        ]);
+        Tenant::factory()->create(['student_id' => $student->id, 'room_id' => $room->id, 'status' => 'active']);
+        $file = UploadedFile::fake()->createWithContent(
+            'payments.csv',
+            "student_number,amount,payment_date,due_date,method,reference_number,status,notes\nSTU-PAY-001,1500,2026-06-05,2026-06-30,gcash,PAY-IMPORT-001,paid,June payment\n"
+        );
+
+        $this->actingAs($admin)
+            ->post(route('admin.imports.payments'), ['file' => $file])
+            ->assertSessionHas('status');
+
+        $this->assertDatabaseHas('payments', [
+            'amount' => 1500,
+            'reference_number' => 'PAY-IMPORT-001',
+            'payment_method' => 'gcash',
+        ]);
     }
 }
