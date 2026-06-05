@@ -79,18 +79,29 @@
                     </div>
 
 
-                    <div class="mt-4 flex justify-between text-sm">
+                    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
 
                         <span>
                             Status:
-                            <strong>
+                            <strong class="status-pill status-{{ str_replace(' ', '_', strtolower($request->status)) }} ml-2">
                                 {{ $request->status }}
                             </strong>
                         </span>
 
-                        <span class="text-slate-500">
-                            {{ optional($request->created_at)->diffForHumans() }}
-                        </span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-slate-500">
+                                {{ optional($request->created_at)->diffForHumans() }}
+                            </span>
+
+                            @if($request->status !== 'Resolved')
+                                <form method="post" action="{{ route('admin.maintenance.resolve', $request) }}">
+                                    @csrf
+                                    <button class="btn-primary min-h-0 px-3 py-1.5 text-xs">
+                                        Mark as done
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
 
                     </div>
 

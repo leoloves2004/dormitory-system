@@ -36,4 +36,16 @@ class MaintenanceRequestController extends Controller
             'Maintenance request submitted.'
         );
     }
+
+    public function markResolved(MaintenanceRequest $maintenanceRequest)
+    {
+        $maintenanceRequest->update([
+            'status' => 'Resolved',
+        ]);
+
+        return back()->with(
+            'status',
+            'Maintenance request marked as done.'
+        );
+    }
 }

@@ -97,6 +97,11 @@ Route::middleware('auth')->group(function (): void {
                 [MaintenanceRequestController::class, 'store']
             )->name('maintenance.store');
 
+            Route::post(
+                '/maintenance/{maintenanceRequest}/resolve',
+                [MaintenanceRequestController::class, 'markResolved']
+            )->name('maintenance.resolve');
+
             Route::resource(
                 'rooms',
                 RoomController::class
