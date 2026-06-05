@@ -15,7 +15,10 @@ class StudentPortalController extends Controller
 {
     public function dashboard(Request $request): View
     {
-        return $this->housing($request);
+        return view('student.dashboard', $this->portalData($request) + [
+            'section' => 'dashboard',
+            'title' => 'Student Portal',
+        ]);
     }
 
     public function housing(Request $request): View

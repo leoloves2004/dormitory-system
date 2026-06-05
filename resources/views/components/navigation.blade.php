@@ -10,7 +10,8 @@
         <x-nav-link href="{{ route('admin.visitor-logs.index') }}" :active="request()->routeIs('admin.visitor-logs.*')">Visitor Logs</x-nav-link>
         <x-nav-link href="{{ route('admin.reports.index') }}" :active="request()->routeIs('admin.reports.*')">Reports</x-nav-link>
     @else
-        <x-nav-link href="{{ route('student.housing') }}" :active="request()->routeIs('student.dashboard', 'student.housing')">Housing Request</x-nav-link>
+        <x-nav-link href="{{ route('student.dashboard') }}" :active="request()->routeIs('student.dashboard')">Dashboard</x-nav-link>
         <x-nav-link href="{{ route('student.maintenance') }}" :active="request()->routeIs('student.maintenance')">Maintenance Request</x-nav-link>
+        <x-nav-link href="{{ route('student.housing') }}" :active="request()->routeIs('student.housing')">Housing Request</x-nav-link>
     @endif
 </nav>
