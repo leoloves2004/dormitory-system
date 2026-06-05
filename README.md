@@ -136,3 +136,6 @@ student_number,amount,payment_date,due_date,method,reference_number,status,notes
 
 The interface accepts `.csv` and `.xlsx` extensions. For production-grade XLSX parsing or true binary PDF generation, add packages such as Laravel Excel and DomPDF.
 # dormitory-system
+
+Railway deployment link
+https://dormitory-system-production.up.railway.app/login
