@@ -8,9 +8,12 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     default-mysql-client \
-    nodejs \
-    npm \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip
+
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh \
+    && bash nodesource_setup.sh \
+    && apt-get install -y nodejs \
+    && rm nodesource_setup.sh
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -19,7 +22,7 @@ WORKDIR /var/www/html
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 RUN php artisan config:clear
