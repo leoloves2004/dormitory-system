@@ -5,6 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title }}</title>
+    @php
+        $viteManifestPath = public_path('build/manifest.json');
+        $viteCssPath = null;
+
+        if (file_exists($viteManifestPath)) {
+            $viteManifest = json_decode(file_get_contents($viteManifestPath), true);
+            $viteCssFile = $viteManifest['resources/css/app.css']['file'] ?? null;
+            $viteCssPath = $viteCssFile ? public_path('build/'.$viteCssFile) : null;
+        }
+    @endphp
+    @if ($viteCssPath && file_exists($viteCssPath))
+        <style>{!! file_get_contents($viteCssPath) !!}</style>
+    @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="app-shell">
